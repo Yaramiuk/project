@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Головна</title>
+    <link rel="stylesheet" href="css.css">
+</head>
+<body class="dark-theme">
+    <header>
+        <div class="logo">"Зображення Сайта"</div>
+        <div class="Name">"Назва Сайту"</div>
+        <nav>
+            <ul>
+                <li><a href="main.html">Головна</a></li>
+            <li><a href="main.html">Курси Валют</a></li>
+            <li><a href="crypto.html">Курси Крипто-Валют</a></li>
+            <li><a href="contacts.html">Контакти</a></li>
+            <li>Зміна теми</li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+            <section class="bank-selection">
+                <label for="bank">Оберіть Банк:</label>
+                <select id="bank">
+                    <option>Privat24</option>
+                    <option>Ощадбанк</option>
+                    <option>НБУ</option>
+                </select>
+            </section>
+           
+            <section class="currency-selection">       
+            <div class="currency-left">
+                <label>Вибрана Валюта:</label>
+                <select id="currency-left">
+                    <option value="uah">UAH</option>
+                    <option value="usd">USD</option>
+                    <option value="eur">EUR</option>
+                </select>
+            
+            <input type="number" id="amount-left" placeholder="Введіть суму">
+    </div>
+
+            <button id="switch-currency">🔄</button>
+
+            <div class="currency-right">
+                <label>Вибрана Валюта:</label>
+                <select id="currency-right">
+                    <option value="uah">UAH</option>
+                    <option value="usd">USD</option>
+                    <option value="eur">EUR</option>
+                </select>
+
+                <input type="number" id="amount-right" placeholder="Введіть суму">
+
+            </div>
+        </section>
+        <section class="exchange-rates">
+            <h2>Курси Валют</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Назва Банку</th>
+                        <th>Купівля</th>
+                        <th>Продаж</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Privat24</td>
+                        <td>...</td>
+                        <td>...</td>
+                    </tr>
+                    <tr>
+                        <td>Ощадбанк</td>
+                        <td>...</td>
+                        <td>...</td>
+                    </tr>
+                </tr>
+                <tr>
+                    <td>НБУ</td>
+                    <td>...</td>
+                    <td>...</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <script src="..."></script>
+</body>
+</html>
