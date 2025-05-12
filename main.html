@@ -1,31 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Головна</title>
-    <link rel="stylesheet" href="css.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Головна</title>
+  <link rel="stylesheet" href="css.css">
 </head>
 <body class="dark-theme">
-    <header>
-        <div class="logo">"Зображення Сайта"</div>
-        <div class="Name">"Назва Сайту"</div>
-        <nav>
-            <ul>
-                <li><a href="main.html">Головна</a></li>
-            <li><a href="main.html">Курси Валют</a></li>
-            <li><a href="crypto.html">Курси Крипто-Валют</a></li>
-            <li><a href="contacts.html">Контакти</a></li>
-            <li>Зміна теми</li>
-            </ul>
-        </nav>
-    </header>
-    <main><section class="bank-selection">
+  <header>
+    <div class="logo">Зображення Сайта</div>
+    <div class="Name">Назва Сайту</div>
+    <nav>
+      <ul>
+        <li><a href="main.html">Головна</a></li>
+        <li><a href="main.html">Курси Валют</a></li>
+        <li><a href="crypto.html">Курси Крипто-Валют</a></li>
+        <li><a href="contacts.html">Контакти</a></li>
+        <li>Зміна теми</li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="bank-selection">
       <label for="bank">Оберіть Банк:</label>
       <select id="bank">
         <option value="privat">Privat24</option>
         <option value="oshchad">Ощадбанк</option>
         <option value="nbu">НБУ</option>
+        <option value="mono">Монобанк</option>
       </select>
     </section>
 
@@ -54,9 +57,29 @@
     </section>
   </main>
 
+  <section class="exchange-rates">
+    <h2>Курси Валют</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Назва Банку</th>
+          <th>USD</th>
+          <th>EUR</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="privat-row"><td>Privat24</td><td>...</td><td>...</td></tr>
+        <tr id="oshchad-row"><td>Ощадбанк</td><td>...</td><td>...</td></tr>
+        <tr id="nbu-row"><td>НБУ</td><td>...</td><td>...</td></tr>
+        <tr id="mono-row"><td>Монобанк</td><td>...</td><td>...</td></tr>
+      </tbody>
+    </table>
+  </section>
+
   <script>
     const rateData = {
       privat: {},
+      mono: {},
       nbu: {},
       oshchad: { USD: 39.5, EUR: 42.2, UAH: 1 }
     };
@@ -73,12 +96,10 @@
       document.getElementById("amount-right").value = result.toFixed(2);
     }
 
-    // Події
     document.querySelectorAll("select, input").forEach(el =>
       el.addEventListener("input", updateConversion)
     );
 
-    // Кнопка 🔄
     document.getElementById("switch-currency").addEventListener("click", () => {
       const leftSel = document.getElementById("currency-left");
       const rightSel = document.getElementById("currency-right");
@@ -86,65 +107,75 @@
       updateConversion();
     });
 
-    // Завантаження курсів Privat24
-    fetch("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5")
+    // ✅ ПриватБанк через CORS proxy
+    fetch("https://corsproxy.io/?https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5")
       .then(res => res.json())
       .then(data => {
+        rateData.privat.UAH = 1;
         data.forEach(item => {
-          if (["USD", "EUR"].includes(item.ccy)) {
+          if (item.base_ccy === "UAH" && ["USD", "EUR"].includes(item.ccy)) {
             rateData.privat[item.ccy] = parseFloat(item.sale);
           }
         });
-        rateData.privat.UAH = 1;
         updateConversion();
-      });
+        updateTable();
+      })
+      .catch(err => console.error("Помилка ПриватБанку:", err));
 
-    // Завантаження курсів НБУ
+    // НБУ
     fetch("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json")
       .then(res => res.json())
       .then(data => {
+        rateData.nbu.UAH = 1;
         data.forEach(item => {
           if (["USD", "EUR"].includes(item.cc)) {
             rateData.nbu[item.cc] = item.rate;
           }
         });
-        rateData.nbu.UAH = 1;
         updateConversion();
+        updateTable();
       });
+
+    // Монобанк
+    fetch("https://api.monobank.ua/bank/currency")
+      .then(res => res.json())
+      .then(data => {
+        rateData.mono.UAH = 1;
+        data.forEach(item => {
+          if (item.currencyCodeA === 840 && item.currencyCodeB === 980) {
+            rateData.mono.USD = item.rateSell;
+          }
+          if (item.currencyCodeA === 978 && item.currencyCodeB === 980) {
+            rateData.mono.EUR = item.rateSell;
+          }
+        });
+        updateConversion();
+        updateTable();
+      });
+
+    function updateTable() {
+      document.getElementById("privat-row").innerHTML = `
+        <td>Privat24</td>
+        <td>${rateData.privat.USD?.toFixed(2) || '...'}</td>
+        <td>${rateData.privat.EUR?.toFixed(2) || '...'}</td>
+      `;
+      document.getElementById("oshchad-row").innerHTML = `
+        <td>Ощадбанк</td>
+        <td>${rateData.oshchad.USD.toFixed(2)}</td>
+        <td>${rateData.oshchad.EUR.toFixed(2)}</td>
+      `;
+      document.getElementById("nbu-row").innerHTML = `
+        <td>НБУ</td>
+        <td>${rateData.nbu.USD?.toFixed(2) || '...'}</td>
+        <td>${rateData.nbu.EUR?.toFixed(2) || '...'}</td>
+      `;
+      document.getElementById("mono-row").innerHTML = `
+        <td>Монобанк</td>
+        <td>${rateData.mono.USD?.toFixed(2) || '...'}</td>
+        <td>${rateData.mono.EUR?.toFixed(2) || '...'}</td>
+      `;
+    }
   </script>
-         <section class="exchange-rates">
-            <h2>Курси Валют</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Назва Банку</th>
-                        <th>Купівля</th>
-                        <th>Продаж</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr id="privat-row">
-                        <td>Privat24</td>
-                        <td>...</td>
-                        <td>...</td>
-                    </tr>
-                      <tr id="oshchad-row">
-                        <td>Ощадбанк</td>
-                        <td>...</td>
-                        <td>...</td>
-                    </tr>
-                </tr>
-                <tr id="nbu-row">
-                    <td>НБУ</td>
-                    <td>...</td>
-                    <td>...</td>
-                </tr>
-                </tbody>
-            </table>
-        </section>
-
-        
-</script>
-
 </body>
 </html>
+
