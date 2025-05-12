@@ -20,43 +20,101 @@
             </ul>
         </nav>
     </header>
-    <main>
-            <section class="bank-selection">
-                <label for="bank">Оберіть Банк:</label>
-                <select id="bank">
-                    <option>Privat24</option>
-                    <option>Ощадбанк</option>
-                    <option>НБУ</option>
-                </select>
-            </section>
-           
-            <section class="currency-selection">       
-            <div class="currency-left">
-                <label>Вибрана Валюта:</label>
-                <select id="currency-left">
-                    <option value="uah">UAH</option>
-                    <option value="usd">USD</option>
-                    <option value="eur">EUR</option>
-                </select>
-            
-            <input type="number" id="amount-left" placeholder="Введіть суму">
-    </div>
+    <main><section class="bank-selection">
+      <label for="bank">Оберіть Банк:</label>
+      <select id="bank">
+        <option value="privat">Privat24</option>
+        <option value="oshchad">Ощадбанк</option>
+        <option value="nbu">НБУ</option>
+      </select>
+    </section>
 
-            <button id="switch-currency">🔄</button>
+    <section class="currency-selection">
+      <div class="currency-left">
+        <label>Вибрана Валюта:</label>
+        <select id="currency-left">
+          <option value="uah">UAH</option>
+          <option value="usd">USD</option>
+          <option value="eur">EUR</option>
+        </select>
+        <input type="number" id="amount-left" placeholder="Введіть суму">
+      </div>
 
-            <div class="currency-right">
-                <label>Вибрана Валюта:</label>
-                <select id="currency-right">
-                    <option value="uah">UAH</option>
-                    <option value="usd">USD</option>
-                    <option value="eur">EUR</option>
-                </select>
+      <button id="switch-currency">🔄</button>
 
-                <input type="number" id="amount-right" placeholder="Введіть суму">
+      <div class="currency-right">
+        <label>Вибрана Валюта:</label>
+        <select id="currency-right">
+          <option value="uah">UAH</option>
+          <option value="usd">USD</option>
+          <option value="eur">EUR</option>
+        </select>
+        <input type="number" id="amount-right" placeholder="Результат" disabled>
+      </div>
+    </section>
+  </main>
 
-            </div>
-        </section>
-        <section class="exchange-rates">
+  <script>
+    const rateData = {
+      privat: {},
+      nbu: {},
+      oshchad: { USD: 39.5, EUR: 42.2, UAH: 1 }
+    };
+
+    function updateConversion() {
+      const bank = document.getElementById("bank").value;
+      const from = document.getElementById("currency-left").value.toUpperCase();
+      const to = document.getElementById("currency-right").value.toUpperCase();
+      const amount = parseFloat(document.getElementById("amount-left").value);
+
+      if (!rateData[bank] || !rateData[bank][from] || !rateData[bank][to] || isNaN(amount)) return;
+
+      const result = (amount * rateData[bank][from]) / rateData[bank][to];
+      document.getElementById("amount-right").value = result.toFixed(2);
+    }
+
+    // Події
+    document.querySelectorAll("select, input").forEach(el =>
+      el.addEventListener("input", updateConversion)
+    );
+
+    // Кнопка 🔄
+    document.getElementById("switch-currency").addEventListener("click", () => {
+      const leftSel = document.getElementById("currency-left");
+      const rightSel = document.getElementById("currency-right");
+      [leftSel.value, rightSel.value] = [rightSel.value, leftSel.value];
+      updateConversion();
+    });
+
+    // Завантаження курсів Privat24
+    fetch("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5")
+      .then(res => res.json())
+      .then(data => {
+        data.forEach(item => {
+          if (["USD", "EUR"].includes(item.ccy)) {
+            rateData.privat[item.ccy] = parseFloat(item.sale);
+          }
+        });
+        rateData.privat.UAH = 1;
+        updateConversion();
+      });
+
+    // Завантаження курсів НБУ
+    fetch("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json")
+      .then(res => res.json())
+      .then(data => {
+        data.forEach(item => {
+          if (["USD", "EUR"].includes(item.cc)) {
+            rateData.nbu[item.cc] = item.rate;
+          }
+        });
+        rateData.nbu.UAH = 1;
+        updateConversion();
+      });
+  </script>
+</body>
+</html>
+         <section class="exchange-rates">
             <h2>Курси Валют</h2>
             <table>
                 <thead>
@@ -67,18 +125,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr id="privat-row">
                         <td>Privat24</td>
                         <td>...</td>
                         <td>...</td>
                     </tr>
-                    <tr>
+                      <tr id="oshchad-row">
                         <td>Ощадбанк</td>
                         <td>...</td>
                         <td>...</td>
                     </tr>
                 </tr>
-                <tr>
+                <tr id="nbu-row">
                     <td>НБУ</td>
                     <td>...</td>
                     <td>...</td>
@@ -86,7 +144,9 @@
                 </tbody>
             </table>
         </section>
-    </main>
-    <script src="..."></script>
+
+        
+</script>
+
 </body>
 </html>
