@@ -21,63 +21,93 @@
         </nav>
     </header>
 
-    <main>
-           
-            <section class="currency-selection">       
-            <div class="currency-left">
-                <label>Вибрана Валюта:</label>
-                <select id="currency-left">
-                    <option value="...">...</option>
-                    <option value="...">...</option>
-                    <option value="...">...</option>
-                </select>
-            
-            <input type="number" id="amount-left" placeholder="Введіть суму">
-    </div>
+  <main>
+    <section>
+      <label>Вибрана Валюта:</label>
+      <select id="currency-left">
+        <option value="bitcoin">Bitcoin (BTC)</option>
+        <option value="ethereum">Ethereum (ETH)</option>
+        <option value="dogecoin">Dogecoin (DOGE)</option>
+      </select>
+      <input type="number" id="amount-left" placeholder="Введіть суму">
 
-            <button id="switch-currency">🔄</button>
+      <button id="switch-currency">🔄</button>
 
-            <div class="currency-right">
-                <label>Вибрана Валюта:</label>
-                <select id="currency-right">
-                    <option value="...">...</option>
-                    <option value="...">...</option>
-                    <option value="...">...</option>
-                </select>
+      <select id="currency-right">
+        <option value="bitcoin">Bitcoin (BTC)</option>
+        <option value="ethereum">Ethereum (ETH)</option>
+        <option value="dogecoin">Dogecoin (DOGE)</option>
+      </select>
+      <input type="number" id="amount-right" placeholder="Результат" disabled>
+    </section>
 
-                <input type="number" id="amount-right" placeholder="Введіть суму">
+    <section>
+      <h2>Курси Криптовалют (UAH)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Назва</th>
+            <th>Ціна (₴)</th>
+          </tr>
+        </thead>
+        <tbody id="crypto-table-body">
+          <tr><td colspan="2">Завантаження...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
 
-            </div>
-        </section>
+  <script>
+    const cryptoList = ["bitcoin", "ethereum", "dogecoin"];
+    const currencyMap = {};
 
-        <section class="exchange-rates">
-            <h2>Курси Крипто-Валют</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Крипто-Валюти</th>
-                        <th>Ціна</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>...</td>
-                        <td>...</td>
-                    </tr>
-                    <tr>
-                        <td>...</td>
-                        <td>...</td>
-                    </tr>
-                </tr>
-                <tr>
-                    <td>...</td>
-                    <td>...</td>
-                </tr>
-                </tbody>
-            </table>
-        </section>
-    </main>
+    async function fetchCryptoPrices() {
+      try {
+        const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${cryptoList.join(",")}&vs_currencies=uah`);
+        const data = await res.json();
+        cryptoList.forEach(coin => {
+          currencyMap[coin] = data[coin].uah;
+        });
+        updateTable();
+        convertAmount();
+      } catch (err) {
+        document.getElementById("crypto-table-body").innerHTML = "<tr><td colspan='2'>Помилка завантаження</td></tr>";
+        console.error(err);
+      }
+    }
 
-    <script src="..."></script>
+    function updateTable() {
+      const tbody = document.getElementById("crypto-table-body");
+      tbody.innerHTML = "";
+      cryptoList.forEach(coin => {
+        const price = currencyMap[coin]?.toFixed(2) || "...";
+        const name = coin.charAt(0).toUpperCase() + coin.slice(1);
+        tbody.innerHTML += `<tr><td>${name}</td><td>${price} ₴</td></tr>`;
+      });
+    }
+
+    function convertAmount() {
+      const from = document.getElementById("currency-left").value;
+      const to = document.getElementById("currency-right").value;
+      const amount = parseFloat(document.getElementById("amount-left").value);
+      if (!currencyMap[from] || !currencyMap[to] || isNaN(amount)) return;
+      const uahValue = amount * currencyMap[from];
+      const result = uahValue / currencyMap[to];
+      document.getElementById("amount-right").value = result.toFixed(6);
+    }
+
+    document.getElementById("currency-left").addEventListener("change", convertAmount);
+    document.getElementById("currency-right").addEventListener("change", convertAmount);
+    document.getElementById("amount-left").addEventListener("input", convertAmount);
+
+    document.getElementById("switch-currency").addEventListener("click", () => {
+      const left = document.getElementById("currency-left");
+      const right = document.getElementById("currency-right");
+      [left.value, right.value] = [right.value, left.value];
+      convertAmount();
+    });
+
+    fetchCryptoPrices();
+  </script>
 </body>
 </html>
