@@ -1,191 +1,65 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Крипто-Валюти</title>
-  <style>
-    body {
-      background-color: #111;
-      color: #ffc800;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-    }
+body {
+  background-color: #111;
+  color: #ffc800;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
 
-    header, nav ul {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #000;
-      padding: 10px 20px;
-      border: 2px solid #ffc800;
-    }
+header, nav ul {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #000;
+  padding: 10px 20px;
+  border: 2px solid #ffc800;
+}
 
-    nav ul {
-      list-style: none;
-      gap: 10px;
-    }
+nav ul {
+  list-style: none;
+  gap: 10px;
+}
 
-    nav li {
-      padding: 8px 16px;
-      background: #222;
-      border: 2px solid #ffc800;
-      cursor: pointer;
-    }
+nav li {
+  padding: 8px 16px;
+  background: #222;
+  border: 2px solid #ffc800;
+  cursor: pointer;
+}
 
-    nav li:hover {
-      background-color: #333;
-    }
+nav li:hover {
+  background-color: #333;
+}
 
-    section {
-      margin-top: 20px;
-      padding: 20px;
-      border: 2px solid #ffc800;
-    }
+section {
+  margin-top: 20px;
+  padding: 20px;
+  border: 2px solid #ffc800;
+}
 
-    select, input {
-      padding: 10px;
-      margin: 5px;
-      background: #222;
-      color: #fff;
-      border: 1px solid #ffc800;
-    }
+select, input {
+  padding: 10px;
+  margin: 5px;
+  background: #222;
+  color: #fff;
+  border: 1px solid #ffc800;
+}
 
-    button {
-      background: #ffc800;
-      border: none;
-      padding: 10px 15px;
-      cursor: pointer;
-    }
+button {
+  background: #ffc800;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
 
-    th, td {
-      border: 1px solid #ffc800;
-      padding: 10px;
-      text-align: center;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="logo">"Зображення Сайта"</div>
-    <div class="Name">"Назва Сайту"</div>
-    <nav>
-      <ul>
-        <li>Головна</li>
-        <li>Курси Валют</li>
-        <li>Курси Крипто-Валют</li>
-        <li>Контакти</li>
-        <li>Зміна теми</li>
-      </ul>
-    </nav>
-  </header>
-
-  <main>
-    <section>
-      <label>Вибрана Валюта:</label>
-      <select id="currency-left">
-        <option value="BTC">Bitcoin (BTC)</option>
-        <option value="ETH">Ethereum (ETH)</option>
-        <option value="DOGE">Dogecoin (DOGE)</option>
-      </select>
-      <input type="number" id="amount-left" placeholder="Введіть суму">
-      
-      <button id="switch-currency">🔄</button>
-      
-      <select id="currency-right">
-        <option value="BTC">Bitcoin (BTC)</option>
-        <option value="ETH">Ethereum (ETH)</option>
-        <option value="DOGE">Dogecoin (DOGE)</option>
-      </select>
-      <input type="number" id="amount-right" placeholder="Результат" disabled>
-    </section>
-
-    <section>
-      <h2>Курси Крипто-Валют</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Крипто-Валюти</th>
-            <th>Ціна (UAH)</th>
-          </tr>
-        </thead>
-        <tbody id="crypto-table-body">
-          <tr><td colspan="2">Завантаження...</td></tr>
-        </tbody>
-      </table>
-    </section>
-  </main>
-
-  <script>
-    const API_KEY = "0b8a4756-d122-4e0a-bb24-d51cdb479fa5"; // ← ВСТАВ СЮДИ СВІЙ API KEY
-    const cryptoList = ["BTC", "ETH", "DOGE"];
-    const currencyMap = {};
-
-    async function fetchCryptoPrices() {
-      try {
-        const res = await fetch(
-          `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${cryptoList.join(",")}&convert=UAH`,
-          {
-            headers: {
-              "X-CMC_PRO_API_KEY": API_KEY
-            }
-          }
-        );
-        const data = await res.json();
-        cryptoList.forEach(symbol => {
-          const price = data.data[symbol].quote.UAH.price;
-          currencyMap[symbol] = price;
-        });
-        updateTable();
-        convertAmount();
-      } catch (err) {
-        document.getElementById("crypto-table-body").innerHTML = "<tr><td colspan='2'>Помилка завантаження</td></tr>";
-        console.error(err);
-      }
-    }
-
-    function updateTable() {
-      const tbody = document.getElementById("crypto-table-body");
-      tbody.innerHTML = "";
-      cryptoList.forEach(symbol => {
-        const price = currencyMap[symbol]?.toFixed(2) || "...";
-        tbody.innerHTML += `
-          <tr>
-            <td>${symbol}</td>
-            <td>${price} ₴</td>
-          </tr>`;
-      });
-    }
-
-    function convertAmount() {
-      const from = document.getElementById("currency-left").value;
-      const to = document.getElementById("currency-right").value;
-      const amount = parseFloat(document.getElementById("amount-left").value);
-      if (!currencyMap[from] || !currencyMap[to] || isNaN(amount)) return;
-      const inUAH = amount * currencyMap[from];
-      const result = inUAH / currencyMap[to];
-      document.getElementById("amount-right").value = result.toFixed(6);
-    }
-
-    document.getElementById("currency-left").addEventListener("change", convertAmount);
-    document.getElementById("currency-right").addEventListener("change", convertAmount);
-    document.getElementById("amount-left").addEventListener("input", convertAmount);
-
-    document.getElementById("switch-currency").addEventListener("click", () => {
-      const left = document.getElementById("currency-left");
-      const right = document.getElementById("currency-right");
-      [left.value, right.value] = [right.value, left.value];
-      convertAmount();
-    });
-
-    fetchCryptoPrices();
-  </script>
-</body>
-</html>
+th, td {
+  border: 1px solid #ffc800;
+  padding: 10px;
+  text-align: center;
+}
