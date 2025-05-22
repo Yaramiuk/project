@@ -67,8 +67,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr id="privat-row"><td>Privat24</td><td>...</td><td>...</td></tr>
-      
+        <tr id="privat-row"><td>Privat24</td><td>...</td><td>...</td></tr>      
         <tr id="nbu-row"><td>НБУ</td><td>...</td><td>...</td></tr>
         <tr id="mono-row"><td>Монобанк</td><td>...</td><td>...</td></tr>
       </tbody>
@@ -192,8 +191,6 @@
         <td>${rateData.mono.EUR?.toFixed(2) || '...'}</td>
       `;
     }
-
-    // Завантажити всі дані
     fetchPrivat();
     fetchNBU();
     fetchMono();
