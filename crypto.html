@@ -22,7 +22,8 @@
     </header>
 
   <main>
-    <section>
+    <section class="currency-selection">  
+      <div class="currency-left">
       <label>Вибрана Валюта:</label>
       <select id="currency-left">
         <option value="bitcoin">Bitcoin (BTC)</option>
@@ -30,16 +31,20 @@
         <option value="dogecoin">Dogecoin (DOGE)</option>
       </select>
       <input type="number" id="amount-left" placeholder="Введіть суму">
+    </div>
 
       <button id="switch-currency">🔄</button>
 
+      <div class="currency-right">
+        <label>Вибрана Валюта:</label>
       <select id="currency-right">
         <option value="bitcoin">Bitcoin (BTC)</option>
         <option value="ethereum">Ethereum (ETH)</option>
         <option value="dogecoin">Dogecoin (DOGE)</option>
       </select>
       <input type="number" id="amount-right" placeholder="Результат" disabled>
-    </section>
+    </div>
+  </section>
 
     <section>
       <h2>Курси Криптовалют (UAH)</h2>
