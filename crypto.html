@@ -8,11 +8,11 @@
 </head>
 <body class="dark-theme">
   <header>
-    <div class="logo">"Зображення Сайта"</div>
-    <div class="Name">"Назва Сайту"</div>
+<div class="logo">
+    <img id="site-logo" src="1.png" alt="Логотип сайта">
+</div>
     <nav>
       <ul>
-        <li><a href="main.html">Головна</a></li>
         <li><a href="main.html">Курси Валют</a></li>
         <li><a href="crypto.html">Курси Крипто-Валют</a></li>
         <li><a href="contacts.html">Контакти</a></li>
@@ -140,6 +140,22 @@
     });
 
     fetchCryptoPrices();
+    
+   let isThemeChanged = false;
+
+document.getElementById("theme-toggle").addEventListener("click", function() {
+    let logo = document.getElementById("site-logo");
+
+    if (!isThemeChanged) {
+        logo.src = "2.png"; 
+        isThemeChanged = true;
+    } else {
+        logo.src = "1.png"; 
+        isThemeChanged = false;
+    }
+});
+
+
   </script>
 </body>
 </html>
