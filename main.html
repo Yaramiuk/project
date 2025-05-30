@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Головна</title>
-  <link rel="stylesheet" href="css.css">
+  <link id="theme-style" rel="stylesheet" href="css.css">
 </head>
 <body class="dark-theme">
   <header>
-    <div class="logo">Зображення Сайта</div>
-    <div class="Name">Назва Сайту</div>
+<div class="logo">
+    <img id="site-logo" src="1.png" alt="Логотип сайта">
+</div>
     <nav>
       <ul>
-        <li><a href="main.html">Головна</a></li>
         <li><a href="main.html">Курси Валют</a></li>
         <li><a href="crypto.html">Курси Крипто-Валют</a></li>
         <li><a href="contacts.html">Контакти</a></li>
-        <li>Зміна теми</li>
+        <li id="theme-toggle" style="cursor: pointer;">Зміна теми</li>
       </ul>
     </nav>
   </header>
@@ -195,6 +195,27 @@
     fetchNBU();
     fetchMono();
   });
+
+  document.getElementById("theme-toggle").addEventListener("click", () => {
+      const link = document.getElementById("theme-style");
+      link.href = link.href.includes("css.css") ? "arab.css" : "css.css";
+    });
+
+  
+   let isThemeChanged = false;
+
+document.getElementById("theme-toggle").addEventListener("click", function() {
+    let logo = document.getElementById("site-logo");
+
+    if (!isThemeChanged) {
+        logo.src = "2.png"; 
+        isThemeChanged = true;
+    } else {
+        logo.src = "1.png"; 
+        isThemeChanged = false;
+    }
+});
+  
 </script>
 
 </body>
