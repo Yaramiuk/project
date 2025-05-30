@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -8,9 +8,9 @@
 </head>
 <body class="dark-theme">
   <header>
-<div class="logo">
-    <img id="site-logo" src="1.png" alt="Логотип сайта">
-</div>
+    <div class="logo">
+      <img id="site-logo" src="1.png" alt="Логотип сайта">
+    </div>
     <nav>
       <ul>
         <li><a href="main.html">Курси Валют</a></li>
@@ -61,12 +61,12 @@
     </section>
 
     <section>
-      <h2>Курси Криптовалют (USD)</h2>
+      <h2>Курси Криптовалют (UAH)</h2>
       <table>
         <thead>
           <tr>
             <th>Назва</th>
-            <th>Ціна ($)</th>
+            <th>Ціна (₴)</th>
           </tr>
         </thead>
         <tbody id="crypto-table-body">
@@ -90,11 +90,17 @@
       try {
         const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${cryptoList.join(",")}&vs_currencies=uah,usd`);
         const data = await res.json();
+
         allList.forEach(coin => {
-          if (coin === "uah") currencyMap[coin] = data["tether"].uah / data["tether"].usd;
-          else if (coin === "usd") currencyMap[coin] = 1;
-          else currencyMap[coin] = data[coin]?.usd || 0;
+          if (coin === "uah") {
+            currencyMap[coin] = 1; 
+          } else if (coin === "usd") {
+            currencyMap[coin] = data["tether"].usd; 
+          } else {
+            currencyMap[coin] = data[coin]?.uah || 0; 
+          }
         });
+
         updateTable();
         convertAmount();
       } catch (err) {
@@ -109,7 +115,7 @@
       cryptoList.forEach(coin => {
         const price = currencyMap[coin]?.toFixed(2) || "...";
         const name = coin.charAt(0).toUpperCase() + coin.slice(1);
-        tbody.innerHTML += `<tr><td>${name}</td><td>${price} $</td></tr>`;
+        tbody.innerHTML += `<tr><td>${name}</td><td>${price} ₴</td></tr>`;
       });
     }
 
@@ -118,8 +124,8 @@
       const to = document.getElementById("currency-right").value;
       const amount = parseFloat(document.getElementById("amount-left").value);
       if (!currencyMap[from] || !currencyMap[to] || isNaN(amount)) return;
-      const usdValue = from === "usd" ? amount : amount * currencyMap[from];
-      const result = to === "usd" ? usdValue : usdValue / currencyMap[to];
+      const uahValue = from === "uah" ? amount : amount * currencyMap[from];
+      const result = to === "uah" ? uahValue : uahValue / currencyMap[to];
       document.getElementById("amount-right").value = result.toFixed(6);
     }
 
@@ -134,28 +140,24 @@
       convertAmount();
     });
 
-    document.getElementById("theme-toggle").addEventListener("click", () => {
+    let isThemeChanged = false;
+
+    document.getElementById("theme-toggle").addEventListener("click", function () {
       const link = document.getElementById("theme-style");
-      link.href = link.href.includes("css.css") ? "arab.css" : "css.css";
+      const logo = document.getElementById("site-logo");
+
+      if (!isThemeChanged) {
+        link.href = "arab.css";
+        logo.src = "2.png";
+        isThemeChanged = true;
+      } else {
+        link.href = "css.css";
+        logo.src = "1.png";
+        isThemeChanged = false;
+      }
     });
 
     fetchCryptoPrices();
-    
-   let isThemeChanged = false;
-
-document.getElementById("theme-toggle").addEventListener("click", function() {
-    let logo = document.getElementById("site-logo");
-
-    if (!isThemeChanged) {
-        logo.src = "2.png"; 
-        isThemeChanged = true;
-    } else {
-        logo.src = "1.png"; 
-        isThemeChanged = false;
-    }
-});
-
-
   </script>
 </body>
 </html>
