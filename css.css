@@ -172,3 +172,8 @@ input[type="number"] {
     border-radius: 5px;
     text-align: center;
 }
+
+.logo img {
+    width: 300px; 
+    height: auto;
+}
