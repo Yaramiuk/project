@@ -35,9 +35,10 @@ nav ul li {
     cursor: pointer;
     padding: 10px;
     color: #7fffd4;
-    background-color: #1a2323;
+    transition: all 0.3s ease;
     border-radius: 5px;
-    transition: 0.3s ease;
+    background-color: #1a2323;
+    text-decoration: none;
 }
 
 a {
@@ -54,16 +55,42 @@ nav ul li:last-child {
     padding: 8px 12px;
 }
 
-.currency-selection,
-.bank-selection,
-.exchange-rates {
-    background-color: #121818;
+nav ul li a:hover {
+    color: #FFC107;
+}
+
+.currency-selection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    background-color: #0f1616;
     color: #7fffd4;
     border: 2px solid #7fffd4;
     border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(127, 255, 212, 0.3);
+}
+
+.bank-selection {
     margin-bottom: 20px;
+    padding: 15px;
+    background-color: #0f1616;
+    color: #7fffd4;
+    border: 2px solid #7fffd4;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(255, 215, 0, 0.6);     
+    border-bottom: 3px solid #7fffd4;
+}
+
+.exchange-rates{
+    margin: 20px;
+    padding: 15px;
+    background-color: #0f1616;
+    color: #7fffd4;
+    border-radius: 10px;
+    border: 2px solid #7fffd4;
+    box-shadow: 0px 0px 10px rgba(255, 215, 0, 0.6);
 }
 
 table {
@@ -75,19 +102,20 @@ table {
 table th, table td {
     border: 1px solid #7fffd4;
     padding: 10px;
+    text-align: center;
     background-color: #0f1616;
     color: #7fffd4;
 }
 
-select,
-input[type="number"] {
-    background-color: #1a2323;
+select {
+    padding: 10px;
+    font-size: 16px;
+    background-color: #0f1616;
     color: #7fffd4;
     border: 2px solid #7fffd4;
     border-radius: 5px;
-    padding: 10px;
-    font-size: 16px;
-    transition: 0.3s ease;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 select:hover {
@@ -103,12 +131,87 @@ button {
     border: 2px solid #ff6f61;
     border-radius: 8px;
     cursor: pointer;
-    transition: 0.3s ease;
+    transition: all 0.3s ease;
     position: relative;
     top: -55px;
+    left: 0px;
 }
 
 button:hover {
     background-color: #ff4d3a;
     box-shadow: 0px 0px 10px rgba(255, 111, 97, 0.6);
+}
+
+.currency-left{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.currency-right{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.amount-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #121818;
+    padding: 10px;
+    border: 2px solid #7fffd4;
+    border-radius: 5px;
+}
+
+input[type="number"] {
+    width: 150px;
+    padding: 50px;
+    font-size: 16px;
+    background-color: #121818;
+    color: #7fffd4;
+    border: 2px solid #7fffd4;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.logo img {
+    width: 300px; 
+    height: auto;
+}
+
+input, textarea {
+    width: 95%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #121818;
+    color: #7fffd4;
+    border: 2px solid #7fffd4;
+    border-radius: 5px;
+}
+
+.contact-form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #121818;
+    border: 2px solid #7fffd4;
+    border-radius: 10px;
+}
+
+button[type="submit1"] {
+    padding: 12px 18px;
+    font-size: 30px;
+    font-weight: bold;
+    background-color: #7fffd4;
+    color: #000;
+    border-radius: 8px;
+    border: 2px solid #7fffd4;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    top: 40px;
+    left: 0px;
 }
