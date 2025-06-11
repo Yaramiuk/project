@@ -140,22 +140,43 @@
       convertAmount();
     });
 
-    let isThemeChanged = false;
+    document.addEventListener("DOMContentLoaded", () => {
+      const themeLink = document.getElementById("theme-style");
+      const savedTheme = localStorage.getItem("theme");
 
-    document.getElementById("theme-toggle").addEventListener("click", function () {
-      const link = document.getElementById("theme-style");
-      const logo = document.getElementById("site-logo");
+      if (savedTheme) {
+        themeLink.href = savedTheme; // Применяем сохраненную тему
+      }
+
+      document.getElementById("theme-toggle").addEventListener("click", () => {
+        let newTheme = themeLink.href.includes("css.css") ? "arab.css" : "css.css";
+        themeLink.href = newTheme;
+        localStorage.setItem("theme", newTheme); // Сохраняем тему
+      });
+    });
+
+    let isThemeChanged = localStorage.getItem("themeChanged") === "true";
+
+    document.getElementById("theme-toggle").addEventListener("click", function() {
+      let logo = document.getElementById("site-logo");
 
       if (!isThemeChanged) {
-        link.href = "arab.css";
-        logo.src = "2.png";
-        isThemeChanged = true;
+        logo.src = "2.png";  
+        localStorage.setItem("themeChanged", "true");
       } else {
-        link.href = "css.css";
-        logo.src = "1.png";
-        isThemeChanged = false;
+        logo.src = "1.png";  
+        localStorage.setItem("themeChanged", "false");
       }
+
+      isThemeChanged = !isThemeChanged;
     });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      let logo = document.getElementById("site-logo");
+      isThemeChanged = localStorage.getItem("themeChanged") === "true";
+      logo.src = isThemeChanged ? "2.png" : "1.png";
+    });
+
 
     fetchCryptoPrices();
   </script>
