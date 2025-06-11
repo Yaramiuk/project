@@ -62,8 +62,8 @@
       <thead>
         <tr>
           <th>Назва Банку</th>
-          <th>USD</th>
-          <th>EUR</th>
+          <th>Купівля</th>
+          <th>Продаж</th>
         </tr>
       </thead>
       <tbody>
@@ -73,7 +73,7 @@
       </tbody>
     </table>
   </section>
- <script>
+<script>
   document.addEventListener("DOMContentLoaded", () => {
     const rateData = {
       privat: {},
@@ -196,27 +196,42 @@
     fetchMono();
   });
 
-  document.getElementById("theme-toggle").addEventListener("click", () => {
-      const link = document.getElementById("theme-style");
-      link.href = link.href.includes("css.css") ? "arab.css" : "css.css";
-    });
+  document.addEventListener("DOMContentLoaded", () => {
+    const themeLink = document.getElementById("theme-style");
+    const savedTheme = localStorage.getItem("theme");
 
-  
-   let isThemeChanged = false;
+    if (savedTheme) {
+        themeLink.href = savedTheme; // Применяем сохраненную тему
+    }
+
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        let newTheme = themeLink.href.includes("css.css") ? "arab.css" : "css.css";
+        themeLink.href = newTheme;
+        localStorage.setItem("theme", newTheme); // Сохраняем тему
+    });
+});
+
+let isThemeChanged = localStorage.getItem("themeChanged") === "true";
 
 document.getElementById("theme-toggle").addEventListener("click", function() {
     let logo = document.getElementById("site-logo");
 
     if (!isThemeChanged) {
-        logo.src = "2.png"; 
-        isThemeChanged = true;
+        logo.src = "2.png";  
+        localStorage.setItem("themeChanged", "true");
     } else {
-        logo.src = "1.png"; 
-        isThemeChanged = false;
+        logo.src = "1.png";  
+        localStorage.setItem("themeChanged", "false");
     }
-});
-  
-</script>
 
+    isThemeChanged = !isThemeChanged;
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    let logo = document.getElementById("site-logo");
+    isThemeChanged = localStorage.getItem("themeChanged") === "true";
+    logo.src = isThemeChanged ? "2.png" : "1.png";
+});
+</script>
 </body>
 </html>
