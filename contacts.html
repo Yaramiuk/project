@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Контакти</title>
-  <link id="theme-style" rel="stylesheet" href="contacts.css">
+  <link id="theme-style" rel="stylesheet" href="css.css">
 </head>
 <body class="dark-theme">
   <header>
@@ -38,23 +38,41 @@
     </section>
   </main>
   <script>
-        document.getElementById("theme-toggle").addEventListener("click", () => {
-      const link = document.getElementById("theme-style");
-      link.href = link.href.includes("contacts.css") ? "arab.css" : "contacts.css";
+      document.addEventListener("DOMContentLoaded", () => {
+    const themeLink = document.getElementById("theme-style");
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme) {
+        themeLink.href = savedTheme; // Применяем сохраненную тему
+    }
+
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        let newTheme = themeLink.href.includes("css.css") ? "arab.css" : "css.css";
+        themeLink.href = newTheme;
+        localStorage.setItem("theme", newTheme); // Сохраняем тему
     });
-    
-   let isThemeChanged = false;
+});
+
+let isThemeChanged = localStorage.getItem("themeChanged") === "true";
 
 document.getElementById("theme-toggle").addEventListener("click", function() {
     let logo = document.getElementById("site-logo");
 
     if (!isThemeChanged) {
-        logo.src = "2.png"; 
-        isThemeChanged = true;
+        logo.src = "2.png";  
+        localStorage.setItem("themeChanged", "true");
     } else {
-        logo.src = "1.png"; 
-        isThemeChanged = false;
+        logo.src = "1.png";  
+        localStorage.setItem("themeChanged", "false");
     }
+
+    isThemeChanged = !isThemeChanged;
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    let logo = document.getElementById("site-logo");
+    isThemeChanged = localStorage.getItem("themeChanged") === "true";
+    logo.src = isThemeChanged ? "2.png" : "1.png";
 });
   </script>
 </body>
