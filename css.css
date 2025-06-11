@@ -177,3 +177,40 @@ input[type="number"] {
     width: 300px; 
     height: auto;
 }
+nav ul li a:hover {
+    color: #FFC107;
+}
+
+.contact-form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #222;
+    border: 2px solid #FFD700;
+    border-radius: 10px;
+}
+
+input, textarea {
+    width: 95%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #333;
+    color: #FFD700;
+    border: 2px solid #FFD700;
+    border-radius: 5px;
+}
+
+button[type="submit1"] {
+    padding: 12px 18px;
+    font-size: 30px;
+    font-weight: bold;
+    background-color: #FFD700;
+    color: #000;
+    border-radius: 8px;
+    border: 2px solid #FFD700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    top: 40px;
+    left: 0px;
+}
