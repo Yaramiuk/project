@@ -8,9 +8,9 @@
 </head>
 <body class="dark-theme">
   <header>
-<div class="logo">
-    <img id="site-logo" src="1.png" alt="Логотип сайта">
-</div>
+    <div class="logo">
+        <img id="site-logo" src="1.png" alt="Логотип сайта">
+    </div>
     <nav>
       <ul>
         <li><a href="main.html">Курси Валют</a></li>
@@ -73,6 +73,7 @@
       </tbody>
     </table>
   </section>
+
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const rateData = {
@@ -86,11 +87,22 @@
       const from = document.getElementById("currency-left").value.toUpperCase();
       const to = document.getElementById("currency-right").value.toUpperCase();
       const amount = parseFloat(document.getElementById("amount-left").value);
+      const resultInput = document.getElementById("amount-right");
+
+      if (from === to) {
+        resultInput.value = "";
+        resultInput.placeholder = "Неможливо конвертувати валюту в саму себе";
+        resultInput.style.border = "2px solid red";
+        return;
+      } else {
+        resultInput.placeholder = "Результат";
+        resultInput.style.border = "";
+      }
 
       if (!rateData[bank] || !rateData[bank][from] || !rateData[bank][to] || isNaN(amount)) return;
 
       const result = (amount * rateData[bank][from]) / rateData[bank][to];
-      document.getElementById("amount-right").value = result.toFixed(2);
+      resultInput.value = result.toFixed(2);
     }
 
     document.querySelectorAll("select, input").forEach(el =>
@@ -108,8 +120,6 @@
       try {
         const res = await fetch("https://api.allorigins.win/raw?url=https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5");
         const data = await res.json();
-
-        if (!Array.isArray(data)) throw new Error("Дані ПриватБанку не є масивом");
 
         rateData.privat.UAH = 1;
         data.forEach(item => {
@@ -129,8 +139,6 @@
       try {
         const res = await fetch("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json");
         const data = await res.json();
-
-        if (!Array.isArray(data)) throw new Error("Дані НБУ не є масивом");
 
         rateData.nbu.UAH = 1;
         data.forEach(item => {
@@ -152,8 +160,6 @@
         const targetUrl = "https://api.monobank.ua/bank/currency";
         const res = await fetch(proxyUrl + encodeURIComponent(targetUrl));
         const data = await res.json();
-
-        if (!Array.isArray(data)) throw new Error("Дані Монобанку не є масивом");
 
         rateData.mono.UAH = 1;
         data.forEach(item => {
@@ -191,6 +197,7 @@
         <td>${rateData.mono.EUR?.toFixed(2) || '...'}</td>
       `;
     }
+
     fetchPrivat();
     fetchNBU();
     fetchMono();
@@ -201,19 +208,19 @@
     const savedTheme = localStorage.getItem("theme");
 
     if (savedTheme) {
-        themeLink.href = savedTheme; // Применяем сохраненную тему
+        themeLink.href = savedTheme;
     }
 
     document.getElementById("theme-toggle").addEventListener("click", () => {
         let newTheme = themeLink.href.includes("css.css") ? "arab.css" : "css.css";
         themeLink.href = newTheme;
-        localStorage.setItem("theme", newTheme); // Сохраняем тему
+        localStorage.setItem("theme", newTheme);
     });
-});
+  });
 
-let isThemeChanged = localStorage.getItem("themeChanged") === "true";
+  let isThemeChanged = localStorage.getItem("themeChanged") === "true";
 
-document.getElementById("theme-toggle").addEventListener("click", function() {
+  document.getElementById("theme-toggle").addEventListener("click", function() {
     let logo = document.getElementById("site-logo");
 
     if (!isThemeChanged) {
@@ -225,13 +232,13 @@ document.getElementById("theme-toggle").addEventListener("click", function() {
     }
 
     isThemeChanged = !isThemeChanged;
-});
+  });
 
-document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("DOMContentLoaded", () => {
     let logo = document.getElementById("site-logo");
     isThemeChanged = localStorage.getItem("themeChanged") === "true";
     logo.src = isThemeChanged ? "2.png" : "1.png";
-});
+  });
 </script>
 </body>
 </html>
