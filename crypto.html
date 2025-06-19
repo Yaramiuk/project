@@ -145,13 +145,13 @@
       const savedTheme = localStorage.getItem("theme");
 
       if (savedTheme) {
-        themeLink.href = savedTheme; // Применяем сохраненную тему
+        themeLink.href = savedTheme; 
       }
 
       document.getElementById("theme-toggle").addEventListener("click", () => {
         let newTheme = themeLink.href.includes("css.css") ? "arab.css" : "css.css";
         themeLink.href = newTheme;
-        localStorage.setItem("theme", newTheme); // Сохраняем тему
+        localStorage.setItem("theme", newTheme); 
       });
     });
 
